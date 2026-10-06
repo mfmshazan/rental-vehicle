@@ -1,0 +1,195 @@
+// UDS Travels — Prisma schema
+// See SPEC.md §3 for the data model rationale.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum BusType {
+  AC
+  NON_AC
+  LUXURY
+  SEMI_LUXURY
+}
+
+enum TripStatus {
+  SCHEDULED
+  DEPARTED
+  CANCELLED
+}
+
+enum SeatStatus {
+  HELD
+  BOOKED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  INITIATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum InquiryStatus {
+  NEW
+  QUOTED
+  CONFIRMED
+  CLOSED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  phone        String?
+  passwordHash String?
+  role         Role      @default(CUSTOMER)
+  bookings     Booking[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Bus {
+  id             String     @id @default(cuid())
+  name           String
+  registrationNo String     @unique
+  type           BusType    @default(AC)
+  totalSeats     Int
+  seatLayout     Json // { rows, columns, seats: [{no,row,col,type}], disabled }
+  amenities      Json? // ["wifi","ac","usb"]
+  active         Boolean    @default(true)
+  schedules      Schedule[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Route {
+  id               String     @id @default(cuid())
+  origin           String
+  destination      String
+  distanceKm       Int?
+  approxDurationMin Int?
+  active           Boolean    @default(true)
+  schedules        Schedule[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Schedule {
+  id            String   @id @default(cuid())
+  route         Route    @relation(fields: [routeId], references: [id])
+  routeId       String
+  bus           Bus      @relation(fields: [busId], references: [id])
+  busId         String
+  departureTime String // "06:00" local
+  arrivalTime   String? // "09:30"
+  daysOfWeek    Json // ["MON","WED","FRI"]
+  basePrice     Decimal  @db.Decimal(10, 2)
+  active        Boolean  @default(true)
+  trips         Trip[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Trip {
+  id            String        @id @default(cuid())
+  schedule      Schedule      @relation(fields: [scheduleId], references: [id])
+  scheduleId    String
+  travelDate    DateTime      @db.Date
+  departureAt   DateTime
+  status        TripStatus    @default(SCHEDULED)
+  priceOverride Decimal?      @db.Decimal(10, 2)
+  seatBookings  SeatBooking[]
+  bookings      Booking[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([scheduleId, travelDate])
+  @@index([travelDate])
+}
+
+model SeatBooking {
+  id        String     @id @default(cuid())
+  trip      Trip       @relation(fields: [tripId], references: [id])
+  tripId    String
+  seatNo    String
+  status    SeatStatus @default(HELD)
+  booking   Booking?   @relation(fields: [bookingId], references: [id])
+  bookingId String?
+  userId    String?
+  heldAt    DateTime   @default(now())
+  expiresAt DateTime?
+
+  // The anti-double-booking guard: one row max per (trip, seat).
+  @@unique([tripId, seatNo])
+  @@index([expiresAt])
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  user           User?         @relation(fields: [userId], references: [id])
+  userId         String?
+  trip           Trip          @relation(fields: [tripId], references: [id])
+  tripId         String
+  passengerName  String
+  passengerPhone String
+  passengerEmail String?
+  seatNos        Json // ["1A","1B"]
+  totalAmount    Decimal       @db.Decimal(10, 2)
+  status         BookingStatus @default(PENDING)
+  eTicketRef     String?       @unique
+  seatBookings   SeatBooking[]
+  payment        Payment?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Payment {
+  id         String        @id @default(cuid())
+  booking    Booking       @relation(fields: [bookingId], references: [id])
+  bookingId  String        @unique
+  gatewayRef String? // PayHere payment_id
+  amount     Decimal       @db.Decimal(10, 2)
+  currency   String        @default("LKR")
+  status     PaymentStatus @default(INITIATED)
+  rawPayload Json?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model CharterInquiry {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String
+  email        String?
+  tripDate     DateTime      @db.Date
+  returnDate   DateTime?     @db.Date
+  pickup       String
+  dropoff      String
+  passengers   Int
+  busType      BusType?
+  oneWay       Boolean       @default(true)
+  notes        String?
+  status       InquiryStatus @default(NEW)
+  quotedAmount Decimal?      @db.Decimal(10, 2)
+  adminNotes   String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
