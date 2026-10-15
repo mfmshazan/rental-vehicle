@@ -24,7 +24,7 @@ declare module "next-auth/jwt" {
 }
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().email().toLowerCase(),
   password: z.string().min(1),
 });
 
@@ -46,7 +46,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) return null;
 
-        return { id: user.id, name: user.name, email: user.email, role: user.role };
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],

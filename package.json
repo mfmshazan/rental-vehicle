@@ -1,12 +1,16 @@
 {
-  "name": "bus-booking",
+  "name": "roam-marketplace",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:setup": "node scripts/init-db.cjs && prisma migrate deploy && prisma generate && node prisma/seed.cjs",
+    "db:seed": "node prisma/seed.cjs",
+    "test": "playwright test",
+    "format": "prettier --write src tests scripts prisma/seed.cjs playwright.config.ts next.config.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
@@ -20,6 +24,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
@@ -27,6 +32,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local marketplace data and uploaded photos
+/prisma/*.db
+/prisma/*.db-*
+/data/
+/test-results/
+/playwright-report/
