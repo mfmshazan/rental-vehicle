@@ -47,11 +47,23 @@ model Vehicle {
   active       Boolean   @default(true)
   demo         Boolean   @default(false)
   inquiries    Inquiry[]
+  blockedPeriods BlockedPeriod[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
   @@index([active, city, category])
   @@index([ownerId])
+}
+
+model BlockedPeriod {
+  id        String   @id @default(cuid())
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  startDate String // YYYY-MM-DD, inclusive (same idiom as Inquiry dates)
+  endDate   String // YYYY-MM-DD, inclusive
+  createdAt DateTime @default(now())
+
+  @@index([vehicleId, startDate])
 }
 
 model Inquiry {

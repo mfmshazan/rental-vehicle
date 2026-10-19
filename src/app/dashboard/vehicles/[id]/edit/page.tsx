@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { VehicleForm } from "@/components/vehicle-form";
+import { AvailabilityManager } from "@/components/availability-manager";
 export const metadata = { title: "Edit vehicle" };
 export default async function EditVehiclePage({
   params,
@@ -14,6 +15,7 @@ export default async function EditVehiclePage({
   const { id } = await params;
   const vehicle = await prisma.vehicle.findFirst({
     where: { id, ownerId: session.user.id, demo: false },
+    include: { blockedPeriods: { orderBy: { startDate: "asc" } } },
   });
   if (!vehicle) notFound();
   return (
@@ -27,6 +29,14 @@ export default async function EditVehiclePage({
         <p>Make sure renters have the latest details.</p>
       </div>
       <VehicleForm vehicle={vehicle} />
+      <AvailabilityManager
+        vehicleId={vehicle.id}
+        periods={vehicle.blockedPeriods.map((period) => ({
+          id: period.id,
+          startDate: period.startDate,
+          endDate: period.endDate,
+        }))}
+      />
     </div>
   );
 }

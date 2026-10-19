@@ -55,6 +55,23 @@ const date = z
       parsed.toISOString().slice(0, 10) === value
     );
   }, "Choose a valid date.");
+export const colomboToday = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Colombo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+export const blockedPeriodSchema = z
+  .object({ startDate: date, endDate: date })
+  .refine((value) => value.endDate >= value.startDate, {
+    message: "The end date must be on or after the start date.",
+    path: ["endDate"],
+  })
+  .refine((value) => value.endDate >= colomboToday(), {
+    message: "Choose a period that ends today or in the future.",
+    path: ["endDate"],
+  });
 export const inquirySchema = z
   .object({
     name: z.string().trim().min(2).max(80),
@@ -72,14 +89,7 @@ export const inquirySchema = z
     message: "Return date must be on or after pickup.",
     path: ["endDate"],
   })
-  .refine(
-    (value) =>
-      value.startDate >=
-      new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Asia/Colombo",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).format(new Date()),
-    { message: "Choose today or a future pickup date.", path: ["startDate"] },
-  );
+  .refine((value) => value.startDate >= colomboToday(), {
+    message: "Choose today or a future pickup date.",
+    path: ["startDate"],
+  });

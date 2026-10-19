@@ -8,6 +8,7 @@ import { Icon } from "@/components/icon";
 import { FavoriteButton } from "@/components/favorites";
 import { ContactPanel } from "@/components/contact-panel";
 import { PhotoGallery } from "@/components/photo-gallery";
+import { AvailabilityCalendar } from "@/components/availability-calendar";
 import { VehicleCard } from "@/components/vehicle-card";
 
 type Props = { params: Promise<{ id: string }> };
@@ -27,7 +28,10 @@ export default async function VehiclePage({ params }: Props) {
   const { id } = await params;
   const vehicle = await prisma.vehicle.findFirst({
     where: { id, active: true },
-    include: { owner: { select: { name: true, phone: true } } },
+    include: {
+      owner: { select: { name: true, phone: true } },
+      blockedPeriods: { orderBy: { startDate: "asc" } },
+    },
   });
   if (!vehicle) notFound();
   const related = (await getVehicles())
@@ -93,6 +97,19 @@ export default async function VehiclePage({ params }: Props) {
               </div>
             </section>
           )}
+          <section className="detail-copy">
+            <h2>When can you go?</h2>
+            <p>
+              Dates marked unavailable are already booked or off the road.
+              Confirm exact availability with the owner before you plan.
+            </p>
+            <AvailabilityCalendar
+              blocked={vehicle.blockedPeriods.map((period) => ({
+                startDate: period.startDate,
+                endDate: period.endDate,
+              }))}
+            />
+          </section>
           <section className="detail-copy rental-note">
             <h3>Good to know before you go</h3>
             <p>

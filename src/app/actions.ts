@@ -11,6 +11,7 @@ import {
   registrationSchema,
   vehicleSchema,
   inquirySchema,
+  blockedPeriodSchema,
 } from "@/lib/validation";
 import { parsePhotos, MAX_PHOTOS } from "@/lib/marketplace";
 import { storePhotos } from "@/lib/uploads";
@@ -152,6 +153,41 @@ export async function toggleVehicleAction(form: FormData) {
   revalidatePath("/");
   revalidatePath("/dashboard");
   revalidatePath(`/vehicles/${id}`);
+}
+
+export async function addBlockedPeriodAction(
+  _state: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Please sign in." };
+  const vehicleId = String(form.get("vehicleId") || "");
+  const vehicle = await prisma.vehicle.findFirst({
+    where: { id: vehicleId, ownerId: session.user.id, demo: false },
+    select: { id: true },
+  });
+  if (!vehicle)
+    return {
+      error: "This listing is unavailable or belongs to another owner.",
+    };
+  const parsed = blockedPeriodSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  await prisma.blockedPeriod.create({ data: { ...parsed.data, vehicleId } });
+  revalidatePath(`/dashboard/vehicles/${vehicleId}/edit`);
+  revalidatePath(`/vehicles/${vehicleId}`);
+  return { success: "Those dates are now marked unavailable." };
+}
+
+export async function removeBlockedPeriodAction(form: FormData) {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+  const id = String(form.get("id") || "");
+  const vehicleId = String(form.get("vehicleId") || "");
+  await prisma.blockedPeriod.deleteMany({
+    where: { id, vehicle: { ownerId: session.user.id } },
+  });
+  revalidatePath(`/dashboard/vehicles/${vehicleId}/edit`);
+  revalidatePath(`/vehicles/${vehicleId}`);
 }
 
 export async function inquiryAction(

@@ -1670,6 +1670,130 @@ textarea:focus-visible {
 .detail-thumb.active {
   border-color: var(--green);
 }
+/* Availability — owner manager */
+.availability-manager .form-section-heading span {
+  font-size: 18px;
+}
+.blocked-list {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.blocked-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--cream);
+  font-size: 14px;
+  font-weight: 550;
+}
+.blocked-empty {
+  font-size: 13px;
+  color: #839374;
+}
+.blocked-add {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+}
+.blocked-add .button {
+  width: fit-content;
+}
+/* Availability — customer calendar */
+.availability-calendar {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+.calendar-months {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.calendar-month h4 {
+  font-size: 14px;
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendar-head {
+  font-size: 10px;
+  font-weight: 650;
+  color: #839374;
+  text-align: center;
+  padding-bottom: 4px;
+}
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 6px;
+  background: #eef2e8;
+  color: var(--green);
+}
+.calendar-cell.empty {
+  background: transparent;
+}
+.calendar-cell.past {
+  background: transparent;
+  color: #c3ccb8;
+  text-decoration: line-through;
+}
+.calendar-cell.blocked {
+  background: #f6dcd6;
+  color: #9c3b26;
+}
+.calendar-cell.today {
+  outline: 2px solid var(--green);
+  outline-offset: -2px;
+  font-weight: 700;
+}
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  color: #556;
+}
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.calendar-legend .swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.calendar-legend .swatch.free {
+  background: #eef2e8;
+}
+.calendar-legend .swatch.blocked {
+  background: #f6dcd6;
+}
+.calendar-legend .swatch.today {
+  background: white;
+  outline: 2px solid var(--green);
+  outline-offset: -2px;
+}
+@media (max-width: 560px) {
+  .calendar-months {
+    grid-template-columns: 1fr;
+  }
+}
 .form-submit-row {
   display: flex;
   align-items: center;
