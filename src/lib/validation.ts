@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { categories, cities, features } from "./marketplace";
+import { colomboTodayIso } from "./calendar";
 
 export const phoneSchema = z
   .string()
@@ -55,13 +56,7 @@ const date = z
       parsed.toISOString().slice(0, 10) === value
     );
   }, "Choose a valid date.");
-export const colomboToday = () =>
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Colombo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+export const colomboToday = colomboTodayIso;
 export const blockedPeriodSchema = z
   .object({ startDate: date, endDate: date })
   .refine((value) => value.endDate >= value.startDate, {

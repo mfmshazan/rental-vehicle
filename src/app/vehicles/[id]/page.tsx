@@ -39,6 +39,10 @@ export default async function VehiclePage({ params }: Props) {
     .slice(0, 3);
   const features: string[] = JSON.parse(vehicle.features);
   const photos = parsePhotos(vehicle.photos, vehicle.image);
+  const blocked = vehicle.blockedPeriods.map((period) => ({
+    startDate: period.startDate,
+    endDate: period.endDate,
+  }));
   return (
     <div className="container detail-page">
       <Link href="/#explore" className="back-link">
@@ -103,12 +107,7 @@ export default async function VehiclePage({ params }: Props) {
               Dates marked unavailable are already booked or off the road.
               Confirm exact availability with the owner before you plan.
             </p>
-            <AvailabilityCalendar
-              blocked={vehicle.blockedPeriods.map((period) => ({
-                startDate: period.startDate,
-                endDate: period.endDate,
-              }))}
-            />
+            <AvailabilityCalendar blocked={blocked} />
           </section>
           <section className="detail-copy rental-note">
             <h3>Good to know before you go</h3>
@@ -127,6 +126,7 @@ export default async function VehiclePage({ params }: Props) {
           ownerName={vehicle.owner.name}
           phone={vehicle.owner.phone}
           demo={vehicle.demo}
+          blocked={blocked}
         />
       </div>
       <section className="related-section">

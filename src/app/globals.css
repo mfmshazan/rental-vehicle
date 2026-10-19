@@ -1449,6 +1449,11 @@ textarea:focus-visible {
   color: #4f753b;
   border: 1px solid #d3e4c3;
 }
+.form-message.warn {
+  background: #fdf3e0;
+  color: #8a5a1b;
+  border: 1px solid #f0dcae;
+}
 .fine-print {
   font-size: 9px;
   line-height: 1.8;
@@ -1758,6 +1763,22 @@ textarea:focus-visible {
 .calendar-cell.today {
   outline: 2px solid var(--green);
   outline-offset: -2px;
+  font-weight: 700;
+}
+button.calendar-cell {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+button.calendar-cell.selectable:hover {
+  background: #dce7d0;
+}
+.calendar-cell.in-range {
+  background: #d7e8c8;
+}
+.calendar-cell.selected {
+  background: var(--green);
+  color: white;
   font-weight: 700;
 }
 .calendar-legend {

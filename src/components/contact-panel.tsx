@@ -13,6 +13,7 @@ export function ContactPanel({
   ownerName,
   phone,
   demo,
+  blocked,
 }: {
   id: string;
   title: string;
@@ -20,13 +21,24 @@ export function ContactPanel({
   ownerName: string;
   phone: string | null;
   demo: boolean;
+  blocked: { startDate: string; endDate: string }[];
 }) {
   const [state, action, pending] = useActionState(
     inquiryAction.bind(null, id),
     {},
   );
   const [showForm, setShowForm] = useState(false);
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   const normalized = phone?.replace(/\D/g, "").replace(/^0/, "94");
+  // Non-blocking heads-up: do the chosen dates overlap an unavailable period?
+  const overlapsBlocked =
+    Boolean(start) &&
+    Boolean(end) &&
+    end >= start &&
+    blocked.some(
+      (period) => start <= period.endDate && end >= period.startDate,
+    );
   return (
     <aside className="contact-panel">
       <div className="contact-price">
@@ -126,13 +138,31 @@ export function ContactPanel({
               <div className="form-grid">
                 <label>
                   Pickup date
-                  <input type="date" name="startDate" required />
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={start}
+                    onChange={(event) => setStart(event.target.value)}
+                    required
+                  />
                 </label>
                 <label>
                   Return date
-                  <input type="date" name="endDate" required />
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={end}
+                    onChange={(event) => setEnd(event.target.value)}
+                    required
+                  />
                 </label>
               </div>
+              {overlapsBlocked && (
+                <p className="form-message warn" role="status">
+                  The owner has marked some of these dates unavailable. You can
+                  still ask — they may have options nearby.
+                </p>
+              )}
               <label>
                 Your message
                 <textarea
