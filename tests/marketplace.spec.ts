@@ -197,6 +197,30 @@ test("owner registration, publish, inquiry, ownership checks, edit and pause", a
   await page.getByLabel("Daily rate (LKR)").fill("8000");
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.locator(".dashboard-vehicle")).toContainText("8,000");
+  // Owner blocks an upcoming date range as unavailable.
+  const blockStart = new Date(Date.now() + 10 * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  const blockEnd = new Date(Date.now() + 12 * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  await page.getByRole("link", { name: "Edit", exact: true }).click();
+  await page.getByLabel("Unavailable from").fill(blockStart);
+  await page.getByLabel("Unavailable to").fill(blockEnd);
+  await page.getByRole("button", { name: "Block these dates" }).click();
+  await expect(page.locator(".blocked-list li")).toHaveCount(1);
+  await page.goto("http://localhost:3100/dashboard");
+  // Customer sees the unavailable days on the listing and is warned on overlap.
+  await customerPage.goto(`http://localhost:3100${href}`);
+  await expect(
+    customerPage.locator(".calendar-cell.blocked").first(),
+  ).toBeVisible();
+  await customerPage
+    .getByRole("button", { name: "Prefer to send an inquiry?" })
+    .click();
+  await customerPage.getByLabel("Pickup date").fill(blockStart);
+  await customerPage.getByLabel("Return date").fill(blockEnd);
+  await expect(customerPage.locator(".form-message.warn")).toBeVisible();
   await customerPage.goto("http://localhost:3100/register");
   await customerPage
     .getByLabel("Your name", { exact: true })
