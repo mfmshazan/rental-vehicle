@@ -42,6 +42,7 @@ model Vehicle {
   description  String
   features     String
   image        String
+  photos       String    @default("[]")
   driveType    String    @default("Self-drive")
   active       Boolean   @default(true)
   demo         Boolean   @default(false)

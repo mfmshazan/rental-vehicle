@@ -3,13 +3,21 @@ import { useActionState, useState } from "react";
 import Image from "next/image";
 import type { Vehicle } from "@prisma/client";
 import { saveVehicleAction } from "@/app/actions";
-import { categories, cities, features } from "@/lib/marketplace";
+import {
+  categories,
+  cities,
+  features,
+  parsePhotos,
+  MAX_PHOTOS,
+} from "@/lib/marketplace";
 import { Icon } from "./icon";
 import { ActionForm } from "./action-form";
 
 export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const [state, action, pending] = useActionState(saveVehicleAction, {});
-  const [preview, setPreview] = useState(vehicle?.image || "");
+  const existingPhotos = vehicle ? parsePhotos(vehicle.photos, vehicle.image) : [];
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [removed, setRemoved] = useState<string[]>([]);
   const selectedFeatures: string[] = vehicle
     ? JSON.parse(vehicle.features)
     : [];
@@ -190,40 +198,82 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
           <div>
             <h2>Show it off</h2>
             <p>
-              A clear, recent photo of your actual vehicle makes all the
-              difference.
+              Add up to {MAX_PHOTOS} clear, recent photos of your actual
+              vehicle. The first photo is used as the cover.
             </p>
           </div>
         </div>
+        {existingPhotos.length > 0 && (
+          <div className="photo-manager">
+            <p className="photo-manager-label">
+              Current photos — tick any you’d like to remove.
+            </p>
+            <div className="photo-manager-grid">
+              {existingPhotos.map((url, index) => {
+                const isRemoved = removed.includes(url);
+                return (
+                  <label
+                    key={url}
+                    className={`photo-thumb${isRemoved ? " removed" : ""}`}
+                  >
+                    <Image src={url} alt="" fill unoptimized sizes="200px" />
+                    {index === 0 && !isRemoved && (
+                      <span className="photo-badge">Cover</span>
+                    )}
+                    <span className="photo-thumb-check">
+                      <input
+                        type="checkbox"
+                        name="removePhoto"
+                        value={url}
+                        checked={isRemoved}
+                        onChange={(event) =>
+                          setRemoved((current) =>
+                            event.target.checked
+                              ? [...current, url]
+                              : current.filter((item) => item !== url),
+                          )
+                        }
+                      />
+                      Remove
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <label className="upload-area">
-          {preview ? (
-            <div className="upload-preview">
-              <Image
-                src={preview}
-                alt="Your vehicle photo preview"
-                fill
-                unoptimized
-                sizes="600px"
-              />
+          {newPreviews.length > 0 ? (
+            <div className="upload-preview-grid">
+              {newPreviews.map((src, index) => (
+                <div key={index} className="upload-preview">
+                  <Image
+                    src={src}
+                    alt="Your vehicle photo preview"
+                    fill
+                    unoptimized
+                    sizes="300px"
+                  />
+                </div>
+              ))}
             </div>
           ) : (
             <Icon name="upload" size={32} />
           )}
           <strong>
-            {preview ? "Choose a different photo" : "Add your vehicle photo"}
+            {vehicle ? "Add more photos" : "Add your vehicle photos"}
           </strong>
-          <span>JPEG, PNG or WebP · up to 5 MB</span>
+          <span>JPEG, PNG or WebP · up to 5 MB each</span>
           <input
             type="file"
             name="photo"
             accept="image/jpeg,image/png,image/webp"
+            multiple
             required={!vehicle}
             onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                if (preview.startsWith("blob:")) URL.revokeObjectURL(preview);
-                setPreview(URL.createObjectURL(file));
-              }
+              newPreviews.forEach((url) => URL.revokeObjectURL(url));
+              const files = Array.from(event.target.files ?? []);
+              setNewPreviews(files.map((file) => URL.createObjectURL(file)));
             }}
           />
         </label>

@@ -30,3 +30,10 @@ export async function storePhoto(file: File) {
   await writeFile(path.join(directory, filename), buffer, { flag: "wx" });
   return `/api/photos/${filename}`;
 }
+
+// Store several uploaded photos, preserving their selected order.
+export async function storePhotos(files: File[]) {
+  const stored: string[] = [];
+  for (const file of files) stored.push(await storePhoto(file));
+  return stored;
+}

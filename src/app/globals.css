@@ -1588,6 +1588,88 @@ textarea:focus-visible {
   border-radius: 5px;
   overflow: hidden;
 }
+.upload-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+.upload-preview-grid .upload-preview {
+  height: 120px;
+}
+.photo-manager {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.photo-manager-label {
+  font-size: 12px;
+  color: #839374;
+}
+.photo-manager-grid,
+.detail-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.photo-thumb {
+  position: relative;
+  aspect-ratio: 1.4;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.photo-thumb img,
+.detail-thumb img {
+  object-fit: cover;
+}
+.photo-thumb.removed img {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+.photo-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--green);
+  color: white;
+  font-size: 10px;
+  font-weight: 650;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.photo-thumb-check {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+.detail-gallery {
+  display: grid;
+  gap: 10px;
+}
+.detail-thumb {
+  position: relative;
+  aspect-ratio: 1.4;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: var(--cream);
+}
+.detail-thumb.active {
+  border-color: var(--green);
+}
 .form-submit-row {
   display: flex;
   align-items: center;

@@ -12,7 +12,8 @@ import {
   vehicleSchema,
   inquirySchema,
 } from "@/lib/validation";
-import { storePhoto } from "@/lib/uploads";
+import { parsePhotos, MAX_PHOTOS } from "@/lib/marketplace";
+import { storePhotos } from "@/lib/uploads";
 
 export type FormState = { error?: string; success?: string };
 
@@ -89,23 +90,33 @@ export async function saveVehicleAction(
     return {
       error: "This listing is unavailable or belongs to another owner.",
     };
-  let image = existing?.image;
-  const photo = form.get("photo");
-  if (photo instanceof File && photo.size > 0) {
-    try {
-      image = await storePhoto(photo);
-    } catch (error) {
-      return {
-        error: error instanceof Error ? error.message : "Unable to save photo.",
-      };
-    }
+  // Existing photos carried over on edit (fall back to the legacy single image).
+  const existingPhotos: string[] = existing
+    ? parsePhotos(existing.photos, existing.image)
+    : [];
+  const removed = new Set(form.getAll("removePhoto").map(String));
+  const keptPhotos = existingPhotos.filter((url) => !removed.has(url));
+  const newFiles = form
+    .getAll("photo")
+    .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+  if (keptPhotos.length + newFiles.length > MAX_PHOTOS)
+    return { error: `You can add up to ${MAX_PHOTOS} photos per listing.` };
+  let uploaded: string[];
+  try {
+    uploaded = await storePhotos(newFiles);
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Unable to save photo.",
+    };
   }
-  if (!image)
+  const photos = [...keptPhotos, ...uploaded];
+  if (photos.length === 0)
     return { error: "Add a photo of your vehicle before publishing." };
   const data = {
     ...parsed.data,
     features: JSON.stringify(parsed.data.features),
-    image,
+    image: photos[0], // primary photo, kept for cards and back-compat
+    photos: JSON.stringify(photos),
   };
   try {
     if (existing)

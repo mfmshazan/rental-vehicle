@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getVehicles } from "@/lib/queries";
+import { parsePhotos } from "@/lib/marketplace";
 import { Icon } from "@/components/icon";
 import { FavoriteButton } from "@/components/favorites";
 import { ContactPanel } from "@/components/contact-panel";
+import { PhotoGallery } from "@/components/photo-gallery";
 import { VehicleCard } from "@/components/vehicle-card";
 
 type Props = { params: Promise<{ id: string }> };
@@ -33,6 +34,7 @@ export default async function VehiclePage({ params }: Props) {
     .filter((item) => item.id !== id)
     .slice(0, 3);
   const features: string[] = JSON.parse(vehicle.features);
+  const photos = parsePhotos(vehicle.photos, vehicle.image);
   return (
     <div className="container detail-page">
       <Link href="/#explore" className="back-link">
@@ -55,19 +57,11 @@ export default async function VehiclePage({ params }: Props) {
       </div>
       <div className="detail-layout">
         <div className="detail-main">
-          <div className="detail-photo">
-            <Image
-              src={vehicle.image}
-              alt={vehicle.title}
-              fill
-              priority
-              unoptimized={vehicle.image.startsWith("/api/")}
-              sizes="(max-width: 900px) 100vw, 65vw"
-            />
-            <span className="photo-tag">
-              {vehicle.demo ? "Illustrative photo" : vehicle.driveType}
-            </span>
-          </div>
+          <PhotoGallery
+            photos={photos}
+            alt={vehicle.title}
+            tag={vehicle.demo ? "Illustrative photo" : vehicle.driveType}
+          />
           <div className="detail-specs">
             {[
               ["gear", vehicle.transmission, "Transmission"],

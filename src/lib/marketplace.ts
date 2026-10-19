@@ -30,6 +30,32 @@ export const features = [
 ] as const;
 export const money = (value: number) =>
   new Intl.NumberFormat("en-LK").format(value);
+
+// The most photos a single listing may carry. Lives here (not in uploads.ts)
+// so client components can import it without pulling in server-only modules.
+export const MAX_PHOTOS = 6;
+
+// Vehicle photos are stored as a JSON array in a TEXT column (same idiom as
+// `features`). Parse safely and fall back to the legacy single `image`.
+export function parsePhotos(
+  photos: string | null | undefined,
+  fallback?: string | null,
+): string[] {
+  let list: string[] = [];
+  if (photos) {
+    try {
+      const parsed = JSON.parse(photos);
+      if (Array.isArray(parsed))
+        list = parsed.filter(
+          (item): item is string => typeof item === "string" && item.length > 0,
+        );
+    } catch {
+      // Ignore malformed data and use the fallback below.
+    }
+  }
+  if (list.length === 0 && fallback) list = [fallback];
+  return list;
+}
 export type VehicleCardData = {
   id: string;
   title: string;
