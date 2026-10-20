@@ -66,6 +66,19 @@ model BlockedPeriod {
   @@index([vehicleId, startDate])
 }
 
+// Throttling log for authentication attempts (brute-force / signup abuse).
+model AuthAttempt {
+  id        String   @id @default(cuid())
+  kind      String // "login" | "register"
+  email     String?
+  ip        String
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
 model Inquiry {
   id        String   @id @default(cuid())
   vehicleId String

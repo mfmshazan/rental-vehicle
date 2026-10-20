@@ -14,6 +14,14 @@ import {
   blockedPeriodSchema,
 } from "@/lib/validation";
 import { parsePhotos, MAX_PHOTOS } from "@/lib/marketplace";
+import {
+  clientIp,
+  AUTH_WINDOW_MS,
+  MAX_LOGIN_FAILS_PER_EMAIL,
+  MAX_LOGIN_FAILS_PER_IP,
+  REGISTER_WINDOW_MS,
+  MAX_REGISTERS_PER_IP,
+} from "@/lib/rate-limit";
 import { storePhotos, MAX_PHOTO_BYTES } from "@/lib/uploads";
 
 export type FormState = { error?: string; success?: string };
@@ -24,6 +32,21 @@ export async function registerAction(
 ): Promise<FormState> {
   const parsed = registrationSchema.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const ip = await clientIp();
+  const recentRegisters = await prisma.authAttempt.count({
+    where: {
+      kind: "register",
+      ip,
+      createdAt: { gte: new Date(Date.now() - REGISTER_WINDOW_MS) },
+    },
+  });
+  if (recentRegisters >= MAX_REGISTERS_PER_IP)
+    return {
+      error: "Too many sign-ups from this network. Please try again later.",
+    };
+  await prisma.authAttempt.create({
+    data: { kind: "register", email: parsed.data.email, ip },
+  });
   const { password, ...profile } = parsed.data;
   try {
     await prisma.user.create({
@@ -49,17 +72,39 @@ export async function loginAction(
   _state: FormState,
   form: FormData,
 ): Promise<FormState> {
+  const email = String(form.get("email") || "")
+    .trim()
+    .toLowerCase();
+  const ip = await clientIp();
+  const since = new Date(Date.now() - AUTH_WINDOW_MS);
+  const [emailFails, ipFails] = await Promise.all([
+    prisma.authAttempt.count({
+      where: { kind: "login", success: false, email, createdAt: { gte: since } },
+    }),
+    prisma.authAttempt.count({
+      where: { kind: "login", success: false, ip, createdAt: { gte: since } },
+    }),
+  ]);
+  if (
+    emailFails >= MAX_LOGIN_FAILS_PER_EMAIL ||
+    ipFails >= MAX_LOGIN_FAILS_PER_IP
+  )
+    return {
+      error: "Too many attempts. Please wait a few minutes and try again.",
+    };
   try {
     await signIn("credentials", {
-      email: String(form.get("email") || "")
-        .trim()
-        .toLowerCase(),
+      email,
       password: form.get("password"),
       redirectTo: "/dashboard",
     });
   } catch (error) {
-    if (error instanceof AuthError)
+    if (error instanceof AuthError) {
+      await prisma.authAttempt.create({
+        data: { kind: "login", email, ip, success: false },
+      });
       return { error: "Email or password is incorrect. Please try again." };
+    }
     throw error;
   }
   return {};
