@@ -14,7 +14,7 @@ import {
   blockedPeriodSchema,
 } from "@/lib/validation";
 import { parsePhotos, MAX_PHOTOS } from "@/lib/marketplace";
-import { storePhotos } from "@/lib/uploads";
+import { storePhotos, MAX_PHOTO_BYTES } from "@/lib/uploads";
 
 export type FormState = { error?: string; success?: string };
 
@@ -102,6 +102,8 @@ export async function saveVehicleAction(
     .filter((entry): entry is File => entry instanceof File && entry.size > 0);
   if (keptPhotos.length + newFiles.length > MAX_PHOTOS)
     return { error: `You can add up to ${MAX_PHOTOS} photos per listing.` };
+  if (newFiles.reduce((sum, file) => sum + file.size, 0) > MAX_PHOTOS * MAX_PHOTO_BYTES)
+    return { error: "Those photos are too large together. Please upload smaller images." };
   let uploaded: string[];
   try {
     uploaded = await storePhotos(newFiles);

@@ -2,8 +2,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 
+// Per-photo size cap. The Server Action body limit (next.config.ts) must stay
+// at least MAX_PHOTOS * MAX_PHOTO_BYTES so a full gallery upload can arrive.
+export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
 export async function storePhoto(file: File) {
-  if (file.size > 5 * 1024 * 1024)
+  if (file.size > MAX_PHOTO_BYTES)
     throw new Error("Your photo must be smaller than 5 MB.");
   const buffer = Buffer.from(await file.arrayBuffer());
   let extension: string;
