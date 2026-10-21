@@ -425,7 +425,7 @@ export function Marketplace({
             <div>
               <div className="eyebrow">BEFORE YOU HIT THE ROAD</div>
               <h2>
-                A few things
+                A few things{" "}
                 <br />
                 you might be wondering.
               </h2>
