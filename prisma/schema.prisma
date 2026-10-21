@@ -90,7 +90,9 @@ model Inquiry {
   endDate   String
   message   String
   read      Boolean  @default(false)
+  ip        String?
   createdAt DateTime @default(now())
 
   @@index([vehicleId, createdAt])
+  @@index([ip, createdAt])
 }

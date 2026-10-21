@@ -21,6 +21,9 @@ import {
   MAX_LOGIN_FAILS_PER_IP,
   REGISTER_WINDOW_MS,
   MAX_REGISTERS_PER_IP,
+  INQUIRY_WINDOW_MS,
+  MAX_INQUIRIES_PER_EMAIL,
+  MAX_INQUIRIES_PER_IP,
 } from "@/lib/rate-limit";
 import { storePhotos, MAX_PHOTO_BYTES } from "@/lib/uploads";
 
@@ -249,18 +252,20 @@ export async function inquiryAction(
     where: { id: vehicleId, active: true, demo: false },
   });
   if (!vehicle) return { error: "This vehicle is not accepting inquiries." };
-  const recent = await prisma.inquiry.count({
-    where: {
-      email: parsed.data.email,
-      createdAt: { gte: new Date(Date.now() - 3600000) },
-    },
-  });
-  if (recent >= 5)
+  const ip = await clientIp();
+  const since = new Date(Date.now() - INQUIRY_WINDOW_MS);
+  const [byEmail, byIp] = await Promise.all([
+    prisma.inquiry.count({
+      where: { email: parsed.data.email, createdAt: { gte: since } },
+    }),
+    prisma.inquiry.count({ where: { ip, createdAt: { gte: since } } }),
+  ]);
+  if (byEmail >= MAX_INQUIRIES_PER_EMAIL || byIp >= MAX_INQUIRIES_PER_IP)
     return {
       error:
         "You've sent several inquiries recently. Please try again in an hour.",
     };
-  await prisma.inquiry.create({ data: { ...parsed.data, vehicleId } });
+  await prisma.inquiry.create({ data: { ...parsed.data, vehicleId, ip } });
   revalidatePath("/dashboard");
   return {
     success:
