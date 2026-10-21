@@ -1,7 +1,18 @@
 import { prisma } from "./prisma";
 
+function toStringArray(value: string): string[] {
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed)
+      ? parsed.filter((item): item is string => typeof item === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getVehicles() {
-  return prisma.vehicle.findMany({
+  const rows = await prisma.vehicle.findMany({
     where: { active: true },
     orderBy: [{ demo: "asc" }, { createdAt: "desc" }],
     select: {
@@ -18,8 +29,10 @@ export async function getVehicles() {
       seats: true,
       image: true,
       driveType: true,
+      purposes: true,
       demo: true,
       owner: { select: { name: true } },
     },
   });
+  return rows.map((row) => ({ ...row, purposes: toStringArray(row.purposes) }));
 }

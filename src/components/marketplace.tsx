@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   categories,
   cities,
+  purposes,
   filterVehicles,
   type VehicleCardData,
 } from "@/lib/marketplace";
@@ -22,6 +23,12 @@ const categoryIcons: Record<string, string> = {
   Sports: "car",
 };
 
+const purposeIcons: Record<string, string> = {
+  "All services": "grid",
+  "Events & Functions": "heart",
+  "Tours & Road trips": "pin",
+};
+
 export function Marketplace({
   vehicles,
   savedOnly = false,
@@ -30,6 +37,7 @@ export function Marketplace({
   savedOnly?: boolean;
 }) {
   const [city, setCity] = useState("");
+  const [purpose, setPurpose] = useState("All services");
   const [category, setCategory] = useState("All vehicles");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("recommended");
@@ -43,6 +51,7 @@ export function Marketplace({
     : vehicles;
   const filtered = filterVehicles(source, {
     city,
+    purpose,
     category,
     query,
     sort,
@@ -55,6 +64,7 @@ export function Marketplace({
   ).length;
   function reset() {
     setCity("");
+    setPurpose("All services");
     setCategory("All vehicles");
     setQuery("");
     setTransmission("");
@@ -197,6 +207,19 @@ export function Marketplace({
             </a>
           )}
         </div>
+        <div className="category-row purpose-row">
+          {purposes.map((item) => (
+            <button
+              key={item}
+              className={`category-tab ${purpose === item ? "active" : ""}`}
+              onClick={() => setPurpose(item)}
+              aria-pressed={purpose === item}
+            >
+              <Icon name={purposeIcons[item]} size={23} />
+              {item}
+            </button>
+          ))}
+        </div>
         <div className="category-row">
           {categories.map((item) => (
             <button
@@ -302,12 +325,14 @@ export function Marketplace({
           </div>
         )}
         {(city ||
+          purpose !== "All services" ||
           category !== "All vehicles" ||
           query ||
           activeFilterCount > 0) && (
           <div className="active-filters">
             <span>
               Showing {city || "all locations"}
+              {purpose !== "All services" ? ` · ${purpose}` : ""}
               {category !== "All vehicles" ? ` · ${category}` : ""}
               {query ? ` · “${query}”` : ""}
             </span>

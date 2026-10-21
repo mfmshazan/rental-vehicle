@@ -7,6 +7,7 @@ import {
   categories,
   cities,
   features,
+  purposes,
   parsePhotos,
   MAX_PHOTOS,
 } from "@/lib/marketplace";
@@ -20,6 +21,9 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const [removed, setRemoved] = useState<string[]>([]);
   const selectedFeatures: string[] = vehicle
     ? JSON.parse(vehicle.features)
+    : [];
+  const selectedPurposes: string[] = vehicle
+    ? JSON.parse(vehicle.purposes || "[]")
     : [];
   return (
     <ActionForm action={action} className="vehicle-form form-stack">
@@ -163,6 +167,22 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
             </select>
           </label>
         </div>
+        <fieldset className="features-fieldset">
+          <legend>What’s it good for?</legend>
+          <div className="checkbox-grid">
+            {purposes.slice(1).map((purpose) => (
+              <label key={purpose}>
+                <input
+                  type="checkbox"
+                  name="purposes"
+                  value={purpose}
+                  defaultChecked={selectedPurposes.includes(purpose)}
+                />
+                {purpose}
+              </label>
+            ))}
+          </div>
+        </fieldset>
         <fieldset className="features-fieldset">
           <legend>What’s included?</legend>
           <div className="checkbox-grid">

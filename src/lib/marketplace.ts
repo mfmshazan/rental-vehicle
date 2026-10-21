@@ -7,6 +7,13 @@ export const categories = [
   "Van",
   "Sports",
 ] as const;
+// Service/occasion the vehicle suits. Index 0 ("All services") means no filter;
+// the rest are the taggable purposes owners can pick.
+export const purposes = [
+  "All services",
+  "Events & Functions",
+  "Tours & Road trips",
+] as const;
 export const cities = [
   "Colombo",
   "Kandy",
@@ -70,6 +77,7 @@ export type VehicleCardData = {
   seats: number;
   image: string;
   driveType: string;
+  purposes: string[];
   demo: boolean;
   owner: { name: string };
 };
@@ -80,6 +88,7 @@ export function filterVehicles(
     query?: string;
     city?: string;
     category?: string;
+    purpose?: string;
     transmission?: string;
     maxPrice?: number;
     driveType?: string;
@@ -94,6 +103,9 @@ export function filterVehicles(
           .toLowerCase()
           .includes(query)) &&
       (!filters.city || vehicle.city === filters.city) &&
+      (!filters.purpose ||
+        filters.purpose === "All services" ||
+        vehicle.purposes.includes(filters.purpose)) &&
       (!filters.category ||
         filters.category === "All vehicles" ||
         vehicle.category === filters.category) &&

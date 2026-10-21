@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { categories, cities, features } from "./marketplace";
+import { categories, cities, features, purposes } from "./marketplace";
 import { colomboTodayIso } from "./calendar";
 
 export const phoneSchema = z
@@ -45,6 +45,7 @@ export const vehicleSchema = z.object({
     .min(30, "Tell renters a little more (at least 30 characters).")
     .max(3000),
   features: z.array(z.enum(features)).max(8),
+  purposes: z.array(z.enum(purposes.slice(1) as [string, ...string[]])).max(2),
 });
 const date = z
   .string()

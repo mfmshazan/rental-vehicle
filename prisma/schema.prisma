@@ -41,6 +41,7 @@ model Vehicle {
   seats        Int
   description  String
   features     String
+  purposes     String    @default("[]")
   image        String
   photos       String    @default("[]")
   driveType    String    @default("Self-drive")

@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const vehicles = [
   {
     id: "demo-fiat-500",
+    purposes: ["Tours & Road trips"],
     title: "Fiat 500",
     brand: "Fiat",
     model: "500",
@@ -23,6 +24,7 @@ const vehicles = [
   },
   {
     id: "demo-bmw-sedan",
+    purposes: ["Events & Functions", "Tours & Road trips"],
     title: "BMW 5 Series",
     brand: "BMW",
     model: "5 Series",
@@ -41,6 +43,7 @@ const vehicles = [
   },
   {
     id: "demo-honda-crv",
+    purposes: ["Tours & Road trips"],
     title: "Honda CR-V",
     brand: "Honda",
     model: "CR-V",
@@ -59,6 +62,7 @@ const vehicles = [
   },
   {
     id: "demo-range-rover",
+    purposes: ["Events & Functions", "Tours & Road trips"],
     title: "Range Rover Sport",
     brand: "Land Rover",
     model: "Range Rover Sport",
@@ -77,6 +81,7 @@ const vehicles = [
   },
   {
     id: "demo-vw-camper",
+    purposes: ["Events & Functions", "Tours & Road trips"],
     title: "Volkswagen Camper",
     brand: "Volkswagen",
     model: "Camper",
@@ -95,6 +100,7 @@ const vehicles = [
   },
   {
     id: "demo-bmw-sports",
+    purposes: ["Events & Functions"],
     title: "BMW M4",
     brand: "BMW",
     model: "M4",
@@ -131,6 +137,7 @@ async function main() {
         ...vehicle,
         ownerId: user.id,
         demo: true,
+        purposes: JSON.stringify(vehicle.purposes),
         features: JSON.stringify([
           "Air conditioning",
           "Bluetooth",

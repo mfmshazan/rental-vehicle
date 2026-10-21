@@ -127,6 +127,7 @@ export async function saveVehicleAction(
   const parsed = vehicleSchema.safeParse({
     ...Object.fromEntries(form),
     features: form.getAll("features"),
+    purposes: form.getAll("purposes"),
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const id = String(form.get("id") || "");
@@ -166,6 +167,7 @@ export async function saveVehicleAction(
   const data = {
     ...parsed.data,
     features: JSON.stringify(parsed.data.features),
+    purposes: JSON.stringify(parsed.data.purposes),
     image: photos[0], // primary photo, kept for cards and back-compat
     photos: JSON.stringify(photos),
   };

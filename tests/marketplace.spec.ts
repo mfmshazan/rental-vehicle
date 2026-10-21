@@ -12,6 +12,12 @@ test("search, filters, empty state, saved vehicles, demo contact, and mobile lay
     page.getByRole("heading", { name: "A better ride. A bigger adventure." }),
   ).toBeVisible();
   await expect(page.locator(".vehicle-card")).toHaveCount(6);
+  await page
+    .getByRole("button", { name: "Events & Functions", exact: true })
+    .click();
+  await expect(page.locator(".vehicle-card")).toHaveCount(4);
+  await page.getByRole("button", { name: "All services", exact: true }).click();
+  await expect(page.locator(".vehicle-card")).toHaveCount(6);
   await page.getByLabel("Where are you headed?").selectOption("Kandy");
   await page
     .getByRole("button", { name: "Find a vehicle", exact: true })

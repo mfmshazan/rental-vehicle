@@ -504,6 +504,11 @@ textarea:focus-visible {
   overflow-x: auto;
   scrollbar-width: thin;
 }
+/* The purpose row sits just above the vehicle-type row, a touch tighter. */
+.purpose-row {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
 .category-tab {
   display: flex;
   align-items: center;
