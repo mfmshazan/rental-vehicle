@@ -5,42 +5,48 @@ import { Icon } from "@/components/icon";
 export const metadata = { title: "List your vehicle" };
 export default async function ListVehiclePage() {
   const session = await auth();
+  const heading = (
+    <div className="page-heading">
+      <div className="eyebrow">FOR THE OWNERS. FOR THE OPPORTUNITIES.</div>
+      <h1>
+        Your next chapter
+        <br />
+        starts in your driveway.
+      </h1>
+      <p>List your vehicle. Set your rate. Connect directly with renters.</p>
+    </div>
+  );
   return (
     <div className="container owner-page">
-      <div className="page-heading">
-        <div className="eyebrow">FOR THE OWNERS. FOR THE OPPORTUNITIES.</div>
-        <h1>
-          Your next chapter
-          <br />
-          starts in your driveway.
-        </h1>
-        <p>List your vehicle. Set your rate. Connect directly with renters.</p>
-      </div>
       {session ? (
-        <div className="editor-layout">
-          <VehicleForm />
-          <aside className="owner-tips">
-            <span className="tip-icon">
-              <Icon name="sun" size={28} />
-            </span>
-            <h3>A great listing goes a long way.</h3>
-            <p>
-              Take your photo in daylight, include the whole vehicle, and keep
-              the background simple.
-            </p>
-            <hr />
-            <h4>Clear details. Better connections.</h4>
-            <p>
-              Be upfront about mileage limits, insurance, deposits, and what
-              your daily rate includes.
-            </p>
-            <Link href="/guidelines" className="text-link">
-              Owner guidelines <Icon name="arrow" size={16} />
-            </Link>
-          </aside>
-        </div>
+        <>
+          {heading}
+          <div className="editor-layout">
+            <VehicleForm />
+            <aside className="owner-tips">
+              <span className="tip-icon">
+                <Icon name="sun" size={28} />
+              </span>
+              <h3>A great listing goes a long way.</h3>
+              <p>
+                Take your photo in daylight, include the whole vehicle, and keep
+                the background simple.
+              </p>
+              <hr />
+              <h4>Clear details. Better connections.</h4>
+              <p>
+                Be upfront about mileage limits, insurance, deposits, and what
+                your daily rate includes.
+              </p>
+              <Link href="/guidelines" className="text-link">
+                Owner guidelines <Icon name="arrow" size={16} />
+              </Link>
+            </aside>
+          </div>
+        </>
       ) : (
         <div className="owner-welcome">
+          {heading}
           <div className="owner-benefits">
             {[
               [

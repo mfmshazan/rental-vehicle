@@ -1940,12 +1940,21 @@ button.calendar-cell.selectable:hover {
 }
 .owner-welcome {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 90px;
-  align-items: center;
-  margin-top: 55px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  grid-template-areas:
+    "head card"
+    "benefits card";
+  column-gap: 72px;
+  row-gap: 44px;
+  align-items: start;
+  margin-top: 8px;
+}
+.owner-welcome .page-heading {
+  grid-area: head;
+  margin-bottom: 0;
 }
 .owner-benefits {
+  grid-area: benefits;
   display: flex;
   flex-direction: column;
   gap: 35px;
@@ -1963,6 +1972,8 @@ button.calendar-cell.selectable:hover {
   line-height: 1.9;
 }
 .owner-start-card {
+  grid-area: card;
+  align-self: start;
   background: var(--cream);
   padding: 40px;
   border: 1px solid var(--border);
@@ -3161,10 +3172,14 @@ button.calendar-cell.selectable:hover {
     font-size: 8px;
   }
   .owner-welcome {
-    display: flex;
-    flex-direction: column;
-    gap: 35px;
-    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "head"
+      "card"
+      "benefits";
+    row-gap: 30px;
+    margin-top: 20px;
   }
   .owner-benefits {
     gap: 25px;
