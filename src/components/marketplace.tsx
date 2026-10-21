@@ -388,6 +388,14 @@ export function Marketplace({
           </section>
           <section className="container owner-section">
             <div className="owner-banner">
+              <Image
+                src="/images/suv.jpg"
+                alt="A vehicle ready for its next journey"
+                fill
+                sizes="(max-width: 980px) 100vw, 920px"
+                className="owner-banner-bg"
+              />
+              <div className="owner-banner-overlay" />
               <div className="owner-banner-copy">
                 <div className="eyebrow">A LITTLE MORE FROM YOUR DRIVEWAY</div>
                 <h2>
@@ -396,27 +404,14 @@ export function Marketplace({
                   Someone’s next adventure.
                 </h2>
                 <p>
-                  Turn parked days into possibilities. List your vehicle
-                  <br className="desktop-break" /> and connect with people
-                  looking for a ride like yours.
+                  Turn parked days into possibilities. List your vehicle and
+                  connect with people looking for a ride like yours.
                 </p>
                 <Link href="/list-your-car" className="button button-lime">
                   List your vehicle <Icon name="northeast" size={18} />
                 </Link>
                 <span className="owner-small">
                   Free to list. You’re in the driver’s seat.
-                </span>
-              </div>
-              <div className="owner-banner-visual">
-                <Image
-                  src="/images/suv.jpg"
-                  alt="A vehicle ready for its next journey"
-                  fill
-                  sizes="(max-width: 700px) 100vw, 45vw"
-                />
-                <div className="owner-photo-overlay" />
-                <span className="owner-photo-label">
-                  <span className="live-dot" /> Park less. Possibility more.
                 </span>
               </div>
             </div>
