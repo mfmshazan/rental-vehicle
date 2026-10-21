@@ -28,7 +28,8 @@ test("search, filters, empty state, saved vehicles, demo contact, and mobile lay
     .getByRole("button", { name: "Clear filters", exact: true })
     .click();
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Vehicle type").selectOption("Hatchback");
+  await page.getByRole("button", { name: "Vehicle type" }).click();
+  await page.getByRole("button", { name: "Hatchback", exact: true }).click();
   await expect(page.locator(".card-title")).toHaveText("Fiat 500");
   await page.getByRole("button", { name: "Save vehicle", exact: true }).click();
   await page.goto("/saved");
@@ -48,7 +49,10 @@ test("search, filters, empty state, saved vehicles, demo contact, and mobile lay
   ).toBeVisible();
   await page.getByLabel("Search vehicles", { exact: true }).clear();
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Daily budget").selectOption("10000");
+  await page.getByRole("button", { name: "Daily budget" }).click();
+  await page
+    .getByRole("button", { name: "Up to Rs. 10,000", exact: true })
+    .click();
   await expect(page.locator(".card-title")).toHaveText("Fiat 500");
   await page.getByRole("link", { name: "Fiat 500", exact: true }).click();
   await expect(page.locator(".demo-contact")).toContainText(

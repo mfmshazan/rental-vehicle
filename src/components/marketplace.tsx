@@ -11,6 +11,7 @@ import {
 } from "@/lib/marketplace";
 import { Icon } from "./icon";
 import { VehicleCard } from "./vehicle-card";
+import { SelectMenu } from "./select-menu";
 import { useFavorites } from "./favorites";
 
 const purposeIcons: Record<string, string> = {
@@ -250,63 +251,70 @@ export function Marketplace({
         </div>
         {filtersOpen && (
           <div className="filter-panel">
-            <label>
-              Vehicle type
-              <select
+            <div className="filter-field">
+              <span className="filter-field-label">Vehicle type</span>
+              <SelectMenu
+                label="Vehicle type"
                 value={category}
-                onChange={(event) => setCategory(event.target.value)}
-              >
-                {categories.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Location
-              <select
+                onChange={setCategory}
+                options={categories.map((item) => ({
+                  value: item,
+                  label: item,
+                }))}
+              />
+            </div>
+            <div className="filter-field">
+              <span className="filter-field-label">Location</span>
+              <SelectMenu
+                label="Location"
                 value={city}
-                onChange={(event) => setCity(event.target.value)}
-              >
-                <option value="">All locations</option>
-                {cities.map((city) => (
-                  <option key={city}>{city}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Transmission
-              <select
+                onChange={setCity}
+                options={[
+                  { value: "", label: "All locations" },
+                  ...cities.map((item) => ({ value: item, label: item })),
+                ]}
+              />
+            </div>
+            <div className="filter-field">
+              <span className="filter-field-label">Transmission</span>
+              <SelectMenu
+                label="Transmission"
                 value={transmission}
-                onChange={(event) => setTransmission(event.target.value)}
-              >
-                <option value="">Any transmission</option>
-                <option>Automatic</option>
-                <option>Manual</option>
-              </select>
-            </label>
-            <label>
-              Daily budget
-              <select
+                onChange={setTransmission}
+                options={[
+                  { value: "", label: "Any transmission" },
+                  { value: "Automatic", label: "Automatic" },
+                  { value: "Manual", label: "Manual" },
+                ]}
+              />
+            </div>
+            <div className="filter-field">
+              <span className="filter-field-label">Daily budget</span>
+              <SelectMenu
+                label="Daily budget"
                 value={maxPrice}
-                onChange={(event) => setMaxPrice(event.target.value)}
-              >
-                <option value="">Any price</option>
-                <option value="10000">Up to Rs. 10,000</option>
-                <option value="20000">Up to Rs. 20,000</option>
-                <option value="30000">Up to Rs. 30,000</option>
-              </select>
-            </label>
-            <label>
-              Drive type
-              <select
+                onChange={setMaxPrice}
+                options={[
+                  { value: "", label: "Any price" },
+                  { value: "10000", label: "Up to Rs. 10,000" },
+                  { value: "20000", label: "Up to Rs. 20,000" },
+                  { value: "30000", label: "Up to Rs. 30,000" },
+                ]}
+              />
+            </div>
+            <div className="filter-field">
+              <span className="filter-field-label">Drive type</span>
+              <SelectMenu
+                label="Drive type"
                 value={driveType}
-                onChange={(event) => setDriveType(event.target.value)}
-              >
-                <option value="">Any drive type</option>
-                <option>Self-drive</option>
-                <option>With driver</option>
-              </select>
-            </label>
+                onChange={setDriveType}
+                options={[
+                  { value: "", label: "Any drive type" },
+                  { value: "Self-drive", label: "Self-drive" },
+                  { value: "With driver", label: "With driver" },
+                ]}
+              />
+            </div>
             <button onClick={reset} className="text-link">
               Reset all
             </button>
