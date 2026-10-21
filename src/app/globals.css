@@ -504,10 +504,28 @@ textarea:focus-visible {
   overflow-x: auto;
   scrollbar-width: thin;
 }
-/* The purpose row sits just above the vehicle-type row, a touch tighter. */
-.purpose-row {
-  padding-bottom: 14px;
-  margin-bottom: 14px;
+/* Labelled filter groups: a prominent purpose row, then a lighter type row. */
+.filter-group {
+  margin-bottom: 16px;
+}
+.filter-group:last-of-type {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+}
+.filter-group .category-row {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.filter-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9aa49a;
+  margin-bottom: 9px;
 }
 .category-tab {
   display: flex;
@@ -535,6 +553,16 @@ textarea:focus-visible {
   background: var(--green);
   color: white;
   border-color: var(--green);
+}
+/* Secondary (vehicle-type) row: smaller, lighter chips than the purpose row. */
+.type-row .category-tab {
+  min-height: 42px;
+  padding: 8px 15px;
+  font-size: 10px;
+}
+.type-row .category-tab svg {
+  width: 17px;
+  height: 17px;
 }
 .listing-toolbar {
   display: flex;

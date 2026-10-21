@@ -207,31 +207,37 @@ export function Marketplace({
             </a>
           )}
         </div>
-        <div className="category-row purpose-row">
-          {purposes.map((item) => (
-            <button
-              key={item}
-              className={`category-tab ${purpose === item ? "active" : ""}`}
-              onClick={() => setPurpose(item)}
-              aria-pressed={purpose === item}
-            >
-              <Icon name={purposeIcons[item]} size={23} />
-              {item}
-            </button>
-          ))}
+        <div className="filter-group">
+          <span className="filter-label">What do you need it for?</span>
+          <div className="category-row purpose-row">
+            {purposes.map((item) => (
+              <button
+                key={item}
+                className={`category-tab ${purpose === item ? "active" : ""}`}
+                onClick={() => setPurpose(item)}
+                aria-pressed={purpose === item}
+              >
+                <Icon name={purposeIcons[item]} size={23} />
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="category-row">
-          {categories.map((item) => (
-            <button
-              key={item}
-              className={`category-tab ${category === item ? "active" : ""}`}
-              onClick={() => setCategory(item)}
-              aria-pressed={category === item}
-            >
-              <Icon name={categoryIcons[item]} size={23} />
-              {item}
-            </button>
-          ))}
+        <div className="filter-group">
+          <span className="filter-label">Vehicle type</span>
+          <div className="category-row type-row">
+            {categories.map((item) => (
+              <button
+                key={item}
+                className={`category-tab ${category === item ? "active" : ""}`}
+                onClick={() => setCategory(item)}
+                aria-pressed={category === item}
+              >
+                <Icon name={categoryIcons[item]} size={23} />
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="listing-toolbar">
           <div className="listing-search">
