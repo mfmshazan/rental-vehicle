@@ -13,16 +13,6 @@ import { Icon } from "./icon";
 import { VehicleCard } from "./vehicle-card";
 import { useFavorites } from "./favorites";
 
-const categoryIcons: Record<string, string> = {
-  "All vehicles": "grid",
-  Hatchback: "car",
-  Sedan: "car",
-  SUV: "suv",
-  Luxury: "car",
-  Van: "van",
-  Sports: "car",
-};
-
 const purposeIcons: Record<string, string> = {
   "All services": "grid",
   "Events & Functions": "heart",
@@ -59,9 +49,9 @@ export function Marketplace({
     driveType,
     maxPrice: Number(maxPrice),
   });
-  const activeFilterCount = [transmission, driveType, maxPrice].filter(
-    Boolean,
-  ).length;
+  const activeFilterCount =
+    [transmission, driveType, maxPrice].filter(Boolean).length +
+    (category !== "All vehicles" ? 1 : 0);
   function reset() {
     setCity("");
     setPurpose("All services");
@@ -207,37 +197,18 @@ export function Marketplace({
             </a>
           )}
         </div>
-        <div className="filter-group">
-          <span className="filter-label">What do you need it for?</span>
-          <div className="category-row purpose-row">
-            {purposes.map((item) => (
-              <button
-                key={item}
-                className={`category-tab ${purpose === item ? "active" : ""}`}
-                onClick={() => setPurpose(item)}
-                aria-pressed={purpose === item}
-              >
-                <Icon name={purposeIcons[item]} size={23} />
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="filter-group">
-          <span className="filter-label">Vehicle type</span>
-          <div className="category-row type-row">
-            {categories.map((item) => (
-              <button
-                key={item}
-                className={`category-tab ${category === item ? "active" : ""}`}
-                onClick={() => setCategory(item)}
-                aria-pressed={category === item}
-              >
-                <Icon name={categoryIcons[item]} size={23} />
-                {item}
-              </button>
-            ))}
-          </div>
+        <div className="category-row">
+          {purposes.map((item) => (
+            <button
+              key={item}
+              className={`category-tab ${purpose === item ? "active" : ""}`}
+              onClick={() => setPurpose(item)}
+              aria-pressed={purpose === item}
+            >
+              <Icon name={purposeIcons[item]} size={23} />
+              {item}
+            </button>
+          ))}
         </div>
         <div className="listing-toolbar">
           <div className="listing-search">
@@ -279,6 +250,17 @@ export function Marketplace({
         </div>
         {filtersOpen && (
           <div className="filter-panel">
+            <label>
+              Vehicle type
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+              >
+                {categories.map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </label>
             <label>
               Location
               <select

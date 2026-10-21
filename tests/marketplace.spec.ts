@@ -27,7 +27,8 @@ test("search, filters, empty state, saved vehicles, demo contact, and mobile lay
   await page
     .getByRole("button", { name: "Clear filters", exact: true })
     .click();
-  await page.getByRole("button", { name: "Hatchback", exact: true }).click();
+  await page.getByRole("button", { name: "Filters", exact: true }).click();
+  await page.getByLabel("Vehicle type").selectOption("Hatchback");
   await expect(page.locator(".card-title")).toHaveText("Fiat 500");
   await page.getByRole("button", { name: "Save vehicle", exact: true }).click();
   await page.goto("/saved");
