@@ -33,9 +33,7 @@ export function Marketplace({
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("recommended");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [transmission, setTransmission] = useState("");
   const [driveType, setDriveType] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const favorites = useFavorites();
   const source = savedOnly
     ? vehicles.filter((vehicle) => favorites.includes(vehicle.id))
@@ -46,21 +44,16 @@ export function Marketplace({
     category,
     query,
     sort,
-    transmission,
     driveType,
-    maxPrice: Number(maxPrice),
   });
   const activeFilterCount =
-    [transmission, driveType, maxPrice].filter(Boolean).length +
-    (category !== "All vehicles" ? 1 : 0);
+    (category !== "All vehicles" ? 1 : 0) + (city ? 1 : 0);
   function reset() {
     setCity("");
     setPurpose("All services");
     setCategory("All vehicles");
     setQuery("");
-    setTransmission("");
     setDriveType("");
-    setMaxPrice("");
   }
   function search(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -272,46 +265,6 @@ export function Marketplace({
                 options={[
                   { value: "", label: "All locations" },
                   ...cities.map((item) => ({ value: item, label: item })),
-                ]}
-              />
-            </div>
-            <div className="filter-field">
-              <span className="filter-field-label">Transmission</span>
-              <SelectMenu
-                label="Transmission"
-                value={transmission}
-                onChange={setTransmission}
-                options={[
-                  { value: "", label: "Any transmission" },
-                  { value: "Automatic", label: "Automatic" },
-                  { value: "Manual", label: "Manual" },
-                ]}
-              />
-            </div>
-            <div className="filter-field">
-              <span className="filter-field-label">Daily budget</span>
-              <SelectMenu
-                label="Daily budget"
-                value={maxPrice}
-                onChange={setMaxPrice}
-                options={[
-                  { value: "", label: "Any price" },
-                  { value: "10000", label: "Up to Rs. 10,000" },
-                  { value: "20000", label: "Up to Rs. 20,000" },
-                  { value: "30000", label: "Up to Rs. 30,000" },
-                ]}
-              />
-            </div>
-            <div className="filter-field">
-              <span className="filter-field-label">Drive type</span>
-              <SelectMenu
-                label="Drive type"
-                value={driveType}
-                onChange={setDriveType}
-                options={[
-                  { value: "", label: "Any drive type" },
-                  { value: "Self-drive", label: "Self-drive" },
-                  { value: "With driver", label: "With driver" },
                 ]}
               />
             </div>

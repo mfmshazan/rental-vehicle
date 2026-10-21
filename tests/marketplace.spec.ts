@@ -49,10 +49,8 @@ test("search, filters, empty state, saved vehicles, demo contact, and mobile lay
   ).toBeVisible();
   await page.getByLabel("Search vehicles", { exact: true }).clear();
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByRole("button", { name: "Daily budget" }).click();
-  await page
-    .getByRole("button", { name: "Up to Rs. 10,000", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Vehicle type" }).click();
+  await page.getByRole("button", { name: "Hatchback", exact: true }).click();
   await expect(page.locator(".card-title")).toHaveText("Fiat 500");
   await page.getByRole("link", { name: "Fiat 500", exact: true }).click();
   await expect(page.locator(".demo-contact")).toContainText(

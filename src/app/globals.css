@@ -2724,19 +2724,24 @@ button.calendar-cell.selectable:hover {
   }
   .category-row {
     gap: 8px;
-    margin-right: -18px;
-    padding-right: 18px;
     padding-bottom: 18px;
     margin-bottom: 17px;
   }
   .category-tab {
-    padding: 10px 15px;
-    min-height: 44px;
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+    padding: 10px 6px;
+    min-height: 48px;
     font-size: 10px;
-    gap: 8px;
+    gap: 6px;
   }
   .category-tab svg {
-    width: 19px;
+    width: 18px;
+    flex-shrink: 0;
   }
   .listing-toolbar {
     gap: 12px;
