@@ -15,7 +15,7 @@ import { useFavorites } from "./favorites";
 
 const purposeIcons: Record<string, string> = {
   "All services": "grid",
-  "Events & Functions": "heart",
+  "Events & Functions": "users",
   "Tours & Road trips": "pin",
 };
 
