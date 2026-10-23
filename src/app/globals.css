@@ -1483,6 +1483,7 @@ textarea:focus-visible {
   padding: 12px 13px;
   border-radius: 5px;
   min-height: 45px;
+  font-family: inherit;
   font-size: 12px;
   color: var(--ink);
   width: 100%;
@@ -1490,8 +1491,10 @@ textarea:focus-visible {
 }
 .form-stack input::placeholder,
 .form-stack textarea::placeholder {
-  color: #a0a797;
-  font-weight: 400;
+  color: #aab0a2;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 450;
 }
 .form-stack input:hover,
 .form-stack select:hover,
@@ -1510,6 +1513,23 @@ textarea:focus-visible {
 }
 .form-stack .button {
   min-height: 47px;
+}
+/* Custom dropdowns inside forms match the input styling. */
+.form-stack .select-menu {
+  margin-top: 0;
+}
+.form-stack .select-menu-trigger {
+  min-height: 45px;
+  border-radius: 5px;
+  border-color: #dfe5d7;
+  color: var(--ink);
+  font-weight: 500;
+}
+.form-stack .select-menu-trigger:hover {
+  border-color: #a5b795;
+}
+.form-stack .select-menu-option {
+  font-weight: 500;
 }
 .form-message {
   padding: 13px 16px;

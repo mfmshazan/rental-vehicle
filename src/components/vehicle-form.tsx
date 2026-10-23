@@ -12,13 +12,24 @@ import {
   MAX_PHOTOS,
 } from "@/lib/marketplace";
 import { Icon } from "./icon";
+import { SelectMenu } from "./select-menu";
 import { ActionForm } from "./action-form";
+
+const toOptions = (values: readonly string[]) =>
+  values.map((value) => ({ value, label: value }));
 
 export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const [state, action, pending] = useActionState(saveVehicleAction, {});
   const existingPhotos = vehicle ? parsePhotos(vehicle.photos, vehicle.image) : [];
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
+  const [category, setCategory] = useState(vehicle?.category || "Hatchback");
+  const [city, setCity] = useState(vehicle?.city || "Colombo");
+  const [transmission, setTransmission] = useState(
+    vehicle?.transmission || "Automatic",
+  );
+  const [fuel, setFuel] = useState(vehicle?.fuel || "Petrol");
+  const [driveType, setDriveType] = useState(vehicle?.driveType || "Self-drive");
   const selectedFeatures: string[] = vehicle
     ? JSON.parse(vehicle.features)
     : [];
@@ -83,22 +94,23 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
         <div className="form-grid">
           <label>
             Vehicle type
-            <select
+            <SelectMenu
               name="category"
-              defaultValue={vehicle?.category || "Hatchback"}
-            >
-              {categories.slice(1).map((category) => (
-                <option key={category}>{category}</option>
-              ))}
-            </select>
+              label="Vehicle type"
+              value={category}
+              onChange={setCategory}
+              options={toOptions(categories.slice(1))}
+            />
           </label>
           <label>
             Pickup city
-            <select name="city" defaultValue={vehicle?.city || "Colombo"}>
-              {cities.map((city) => (
-                <option key={city}>{city}</option>
-              ))}
-            </select>
+            <SelectMenu
+              name="city"
+              label="Pickup city"
+              value={city}
+              onChange={setCity}
+              options={toOptions(cities)}
+            />
           </label>
         </div>
       </div>
@@ -113,22 +125,23 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
         <div className="form-grid three">
           <label>
             Transmission
-            <select
+            <SelectMenu
               name="transmission"
-              defaultValue={vehicle?.transmission || "Automatic"}
-            >
-              <option>Automatic</option>
-              <option>Manual</option>
-            </select>
+              label="Transmission"
+              value={transmission}
+              onChange={setTransmission}
+              options={toOptions(["Automatic", "Manual"])}
+            />
           </label>
           <label>
             Fuel
-            <select name="fuel" defaultValue={vehicle?.fuel || "Petrol"}>
-              <option>Petrol</option>
-              <option>Diesel</option>
-              <option>Hybrid</option>
-              <option>Electric</option>
-            </select>
+            <SelectMenu
+              name="fuel"
+              label="Fuel"
+              value={fuel}
+              onChange={setFuel}
+              options={toOptions(["Petrol", "Diesel", "Hybrid", "Electric"])}
+            />
           </label>
           <label>
             Seats
@@ -158,13 +171,13 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
           </label>
           <label>
             Rental type
-            <select
+            <SelectMenu
               name="driveType"
-              defaultValue={vehicle?.driveType || "Self-drive"}
-            >
-              <option>Self-drive</option>
-              <option>With driver</option>
-            </select>
+              label="Rental type"
+              value={driveType}
+              onChange={setDriveType}
+              options={toOptions(["Self-drive", "With driver"])}
+            />
           </label>
         </div>
         <fieldset className="features-fieldset">

@@ -11,11 +11,13 @@ export function SelectMenu({
   value,
   onChange,
   options,
+  name,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   options: Option[];
+  name?: string;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -40,6 +42,7 @@ export function SelectMenu({
   const current = options.find((option) => option.value === value);
   return (
     <div className="select-menu" ref={ref}>
+      {name && <input type="hidden" name={name} value={value} />}
       <button
         type="button"
         className="select-menu-trigger"
