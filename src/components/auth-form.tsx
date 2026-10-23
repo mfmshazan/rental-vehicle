@@ -63,6 +63,11 @@ export function AuthForm({ register = false }: { register?: boolean }) {
           required
         />
       </label>
+      {!register && (
+        <Link href="/forgot-password" className="auth-forgot">
+          Forgot your password?
+        </Link>
+      )}
       {state.error && (
         <p className="form-message error" role="alert">
           {state.error}

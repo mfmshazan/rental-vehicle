@@ -19,6 +19,16 @@ export const registrationSchema = z.object({
     .min(8, "Use at least 8 characters for your password.")
     .max(72),
 });
+export const resetRequestSchema = z.object({
+  email: z.email("Enter a valid email address.").toLowerCase(),
+});
+export const resetPasswordSchema = z.object({
+  token: z.string().min(10),
+  password: z
+    .string()
+    .min(8, "Use at least 8 characters for your password.")
+    .max(72),
+});
 export const vehicleSchema = z.object({
   title: z.string().trim().min(5, "Add a descriptive listing title.").max(80),
   brand: z.string().trim().min(2).max(40),

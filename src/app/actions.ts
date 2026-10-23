@@ -1,5 +1,6 @@
 "use server";
 
+import crypto from "node:crypto";
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
@@ -12,8 +13,11 @@ import {
   vehicleSchema,
   inquirySchema,
   blockedPeriodSchema,
+  resetRequestSchema,
+  resetPasswordSchema,
 } from "@/lib/validation";
 import { parsePhotos, MAX_PHOTOS } from "@/lib/marketplace";
+import { sendPasswordResetEmail } from "@/lib/email";
 import {
   clientIp,
   AUTH_WINDOW_MS,
@@ -24,6 +28,7 @@ import {
   INQUIRY_WINDOW_MS,
   MAX_INQUIRIES_PER_EMAIL,
   MAX_INQUIRIES_PER_IP,
+  MAX_RESETS_PER_IP,
 } from "@/lib/rate-limit";
 import { storePhotos, MAX_PHOTO_BYTES } from "@/lib/uploads";
 
@@ -115,6 +120,86 @@ export async function loginAction(
 
 export async function logoutAction() {
   await signOut({ redirectTo: "/" });
+}
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+export async function requestPasswordResetAction(
+  _state: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const parsed = resetRequestSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  // Always respond identically so we never reveal which emails have accounts.
+  const generic: FormState = {
+    success:
+      "If an account exists for that email, we've sent a password reset link.",
+  };
+
+  const ip = await clientIp();
+  const recent = await prisma.authAttempt.count({
+    where: {
+      kind: "reset",
+      ip,
+      createdAt: { gte: new Date(Date.now() - AUTH_WINDOW_MS) },
+    },
+  });
+  if (recent >= MAX_RESETS_PER_IP) return generic;
+  await prisma.authAttempt.create({
+    data: { kind: "reset", email: parsed.data.email, ip },
+  });
+
+  const user = await prisma.user.findUnique({
+    where: { email: parsed.data.email },
+  });
+  if (user?.passwordHash) {
+    const token = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    await prisma.passwordResetToken.deleteMany({ where: { userId: user.id } });
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        tokenHash,
+        expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS),
+      },
+    });
+    const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    await sendPasswordResetEmail(
+      user.email,
+      `${base}/reset-password?token=${token}`,
+    );
+  }
+  return generic;
+}
+
+export async function resetPasswordAction(
+  _state: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const parsed = resetPasswordSchema.safeParse(Object.fromEntries(form));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  const tokenHash = crypto
+    .createHash("sha256")
+    .update(parsed.data.token)
+    .digest("hex");
+  const record = await prisma.passwordResetToken.findUnique({
+    where: { tokenHash },
+  });
+  if (!record || record.expiresAt < new Date())
+    return {
+      error:
+        "This reset link is invalid or has expired. Please request a new one.",
+    };
+
+  await prisma.user.update({
+    where: { id: record.userId },
+    data: { passwordHash: await bcrypt.hash(parsed.data.password, 12) },
+  });
+  await prisma.passwordResetToken.deleteMany({
+    where: { userId: record.userId },
+  });
+  return { success: "Your password has been updated. You can now log in." };
 }
 
 export async function saveVehicleAction(
