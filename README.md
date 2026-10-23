@@ -21,7 +21,7 @@ The SQLite database uses `RENTAL_DATABASE_URL="file:./roam.db"`, relative to `pr
 
 ## Implemented
 
-- Responsive homepage with local vehicle photography and a locally hosted Manrope font.
+- Responsive homepage with local vehicle photography and a locally hosted Plus Jakarta Sans font.
 - Location, vehicle category, search text, transmission, daily budget, and drive-type filters; price and model-year sorting.
 - Vehicle details with features, daily rates, and public owner contact details.
 - Saved vehicles that persist on the current device through browser local storage.
@@ -61,4 +61,4 @@ Before a public launch, finish email ownership verification/password recovery, a
 - `prisma/`: marketplace schema, migration, and demo seed.
 - `tests/`: end-to-end browser tests with an isolated database.
 - `public/images/CREDITS.md`: photography sources and demo-image disclosures.
-- `public/fonts/OFL.txt`: Manrope font license.
+- `public/fonts/OFL.txt`: Plus Jakarta Sans font license.

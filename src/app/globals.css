@@ -8,12 +8,12 @@
   --lime: #d8edac;
   --cream: #f8f9f5;
   --border: #e5e8e0;
-  --font-sans: var(--font-manrope), Arial, sans-serif;
+  --font-sans: var(--font-jakarta), Arial, sans-serif;
 }
 @theme inline {
   --color-background: #fff;
   --color-foreground: var(--ink);
-  --font-sans: var(--font-manrope), Arial, sans-serif;
+  --font-sans: var(--font-jakarta), Arial, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -26,7 +26,7 @@ body {
   margin: 0;
   background: #fff;
   color: var(--ink);
-  font-family: var(--font-manrope), Arial, sans-serif;
+  font-family: var(--font-jakarta), Arial, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

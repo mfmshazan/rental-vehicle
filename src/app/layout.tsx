@@ -4,9 +4,9 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 
-const manrope = localFont({
-  src: "../../public/fonts/manrope.ttf",
-  variable: "--font-manrope",
+const jakarta = localFont({
+  src: "../../public/fonts/plus-jakarta-sans.ttf",
+  variable: "--font-jakarta",
   display: "swap",
 });
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={jakarta.variable}>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
