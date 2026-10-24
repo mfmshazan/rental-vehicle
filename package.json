@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:setup": "node scripts/init-db.cjs && prisma migrate deploy && prisma generate && node prisma/seed.cjs",
+    "db:setup": "node scripts/init-db.cjs && prisma migrate deploy && prisma generate",
     "db:seed": "node prisma/seed.cjs",
     "test": "playwright test",
     "format": "prettier --write src tests scripts prisma/seed.cjs playwright.config.ts next.config.ts"

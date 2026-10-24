@@ -17,7 +17,7 @@ Open http://localhost:3000. Create an owner account at `/register`; there are no
 
 The SQLite database uses `RENTAL_DATABASE_URL="file:./roam.db"`, relative to `prisma/schema.prisma`. The previous PostgreSQL `DATABASE_URL` is no longer used. Existing values in the developer's `.env` were preserved. Auth.js uses the existing `AUTH_SECRET`.
 
-`db:setup` creates an empty database only when needed, applies committed migrations, generates Prisma Client, and adds six example listings without overwriting existing records. Example owners have no passwords or phone numbers; demo listings cannot receive inquiries. Their imagery and model specifications are illustrative.
+`db:setup` creates an empty database only when needed, applies committed migrations, and generates Prisma Client. It does not seed demo listings, so a fresh install starts empty. To load the six sample listings (also used by the automated tests), run `npm run db:seed`. Those demo owners have no passwords or phone numbers, demo listings cannot receive inquiries, and their imagery is illustrative.
 
 ## Implemented
 
