@@ -271,7 +271,11 @@ test("owner registration, publish, inquiry, ownership checks, edit and pause", a
   await expect(page.locator(".dashboard-vehicle")).toContainText(
     "Toyota Aqua Test Ride",
   );
-  const database = new PrismaClient({ datasourceUrl: "file:./roam-test.db" });
+  const database = new PrismaClient({
+    datasourceUrl:
+      process.env.DATABASE_URL_TEST ||
+      "postgresql://postgres:postgres@localhost:5432/roam_test?schema=public",
+  });
   const owner = await database.user.findUnique({
     where: { email: "owner@test.invalid" },
   });

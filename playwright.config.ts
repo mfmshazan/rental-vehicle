@@ -1,5 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Keep in sync with tests/setup.cjs — the app server under test must use the
+// same database the global setup migrates and seeds.
+const TEST_DATABASE_URL =
+  process.env.DATABASE_URL_TEST ||
+  "postgresql://postgres:postgres@localhost:5432/roam_test?schema=public";
+
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
@@ -25,7 +31,8 @@ export default defineConfig({
     url: "http://localhost:3100/api/health",
     reuseExistingServer: false,
     env: {
-      RENTAL_DATABASE_URL: "file:./roam-test.db",
+      DATABASE_URL: TEST_DATABASE_URL,
+      DIRECT_URL: TEST_DATABASE_URL,
       ROAM_TEST_MODE: "true",
       AUTH_TRUST_HOST: "true",
     },

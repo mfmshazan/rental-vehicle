@@ -15,9 +15,9 @@ npm run dev
 
 Open http://localhost:3000. Create an owner account at `/register`; there are no default account passwords.
 
-The SQLite database uses `RENTAL_DATABASE_URL="file:./roam.db"`, relative to `prisma/schema.prisma`. The previous PostgreSQL `DATABASE_URL` is no longer used. Existing values in the developer's `.env` were preserved. Auth.js uses the existing `AUTH_SECRET`.
+The database is PostgreSQL via `DATABASE_URL` (and `DIRECT_URL` for migrations), read by `prisma/schema.prisma`. Locally, run a Postgres instance (for example `postgres:16` in Docker) or point at a Neon branch. Uploaded photos go to Vercel Blob (`BLOB_READ_WRITE_TOKEN`). Copy `.env.example` to `.env` and fill in the values; Auth.js uses `AUTH_SECRET`.
 
-`db:setup` creates an empty database only when needed, applies committed migrations, generates Prisma Client, and adds six example listings without overwriting existing records. Example owners have no passwords or phone numbers; demo listings cannot receive inquiries. Their imagery and model specifications are illustrative.
+`db:setup` applies committed migrations and generates Prisma Client. It does not seed demo listings, so a fresh install starts empty. To load the six sample listings (also used by the automated tests), run `npm run db:seed`. Those demo owners have no passwords or phone numbers, demo listings cannot receive inquiries, and their imagery is illustrative.
 
 ## Implemented
 
@@ -41,21 +41,21 @@ npm test
 npm run lint
 ```
 
-Playwright uses Microsoft Edge on Windows and Chromium elsewhere (`npx playwright install chromium` if required). Tests launch the production build on port 3100 and use a separate `prisma/roam-test.db`. Test photos are kept under `data/uploads/test`; application photos use `data/uploads/live`. The test suite recreates only the test database.
+Playwright uses Microsoft Edge on Windows and Chromium elsewhere (`npx playwright install chromium` if required). Tests launch the production build on port 3100 against the separate `DATABASE_URL_TEST` Postgres database, which the global setup resets and seeds (`prisma migrate reset`) on each run. Test photo uploads are namespaced under the Blob `uploads/test/` prefix; application photos use `uploads/live/`.
 
 Browser coverage includes filtering, saved vehicles across reloads, mobile overflow and navigation, demo contact restrictions, registration, invalid/valid login, uploading and publishing a vehicle, inquiry date validation, inquiry delivery, marking inquiries read, owner isolation, edits, pausing, and republishing. Screenshots are written under `test-results/`.
 
 ## Storage and deployment
 
-This version runs locally or on a single Node.js server with persistent storage. Back up both `prisma/roam.db` and `data/uploads/live`. Run `npm run build` then `npm start` for production, with a strong `AUTH_SECRET` and HTTPS configured at your host. When using a trusted reverse proxy, configure Auth.js host trust for that deployment.
+The database (PostgreSQL) and uploads (Vercel Blob) are durable shared services, so the app deploys to serverless/ephemeral hosts and scales across instances. It is built for Vercel's free Hobby tier with Neon Postgres and Vercel Blob.
 
-The current SQLite and filesystem storage are not suitable for ephemeral/serverless hosting or multiple independent instances. Before that deployment, move the database and uploads to durable shared services. This work has not deployed the site publicly.
+Deploy on Vercel: push to GitHub and import the project, add the Neon Postgres and Blob integrations (they inject `DATABASE_URL`, `DIRECT_URL`, and `BLOB_READ_WRITE_TOKEN`), then set `AUTH_SECRET`, `NEXT_PUBLIC_BASE_URL`, and optionally the Resend variables. The `vercel-build` script runs `prisma generate && prisma migrate deploy` before `next build`. This work has not deployed the site publicly.
 
 Before a public launch, finish email ownership verification/password recovery, abuse protection and moderation, account deletion/export, and a dependency security review. The dependency audit currently flags a high-severity `deepmerge-ts` advisory through the existing Prisma configuration toolchain; its suggested automatic fix changes the Prisma version, so no forced downgrade was applied. Rental availability calendars, identity verification, payments, refunds, and automated notifications are not implemented. Availability and rental terms are arranged directly with owners.
 
 ## Main files
 
-- `src/app/`: pages, server actions, authentication and photo routes.
+- `src/app/`: pages, server actions, and authentication routes.
 - `src/components/`: marketplace, cards, owner forms, and shared UI.
 - `src/lib/`: validation, search logic, database client, and photo storage.
 - `prisma/`: marketplace schema, migration, and demo seed.

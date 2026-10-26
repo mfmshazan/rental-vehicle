@@ -1,10 +1,15 @@
-import { mkdir, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import path from "node:path";
+import { put } from "@vercel/blob";
 
 // Per-photo size cap. The Server Action body limit (next.config.ts) must stay
 // at least MAX_PHOTOS * MAX_PHOTO_BYTES so a full gallery upload can arrive.
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+
+const CONTENT_TYPES: Record<string, string> = {
+  jpg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+};
 
 export async function storePhoto(file: File) {
   if (file.size > MAX_PHOTO_BYTES)
@@ -23,16 +28,14 @@ export async function storePhoto(file: File) {
   )
     extension = "webp";
   else throw new Error("Please upload a JPEG, PNG, or WebP photo.");
-  const filename = `${randomUUID()}.${extension}`;
-  const directory = path.join(
-    process.cwd(),
-    "data",
-    "uploads",
-    process.env.ROAM_TEST_MODE === "true" ? "test" : "live",
+  // Namespace test uploads so they can be told apart from live listings.
+  const prefix = process.env.ROAM_TEST_MODE === "true" ? "test" : "live";
+  const { url } = await put(
+    `uploads/${prefix}/${randomUUID()}.${extension}`,
+    buffer,
+    { access: "public", contentType: CONTENT_TYPES[extension] },
   );
-  await mkdir(directory, { recursive: true });
-  await writeFile(path.join(directory, filename), buffer, { flag: "wx" });
-  return `/api/photos/${filename}`;
+  return url;
 }
 
 // Store several uploaded photos, preserving their selected order.

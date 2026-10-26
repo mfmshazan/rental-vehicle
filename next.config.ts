@@ -6,13 +6,14 @@ const isDev = process.env.NODE_ENV !== "production";
 // without a nonce, so 'unsafe-inline' is required; dev additionally needs
 // 'unsafe-eval' and websockets for Turbopack HMR. The app loads no third-party
 // scripts/fonts, so everything else is locked to same-origin. blob:/data: cover
-// the client-side image previews. (upgrade-insecure-requests is intentionally
-// omitted so it can't break HTTP localhost/preview servers.)
+// the client-side image previews; listing photos are served from Vercel Blob.
+// (upgrade-insecure-requests is intentionally omitted so it can't break HTTP
+// localhost/preview servers.)
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
   "font-src 'self'",
   `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
   "object-src 'none'",
