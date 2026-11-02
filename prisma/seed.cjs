@@ -68,7 +68,7 @@ const vehicles = [
     model: "Range Rover Sport",
     year: 2020,
     category: "Luxury",
-    city: "Negombo",
+    city: "Gampaha",
     dailyRate: 28000,
     transmission: "Automatic",
     fuel: "Diesel",
