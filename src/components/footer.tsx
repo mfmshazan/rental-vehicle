@@ -6,7 +6,7 @@ export function Footer() {
         <div className="footer-top">
           <div>
             <Link href="/" className="logo">
-              roam<span className="logo-dot">.</span>
+              Roam<span className="logo-dot">.</span>
             </Link>
             <p>
               Good journeys start with the right ride.
