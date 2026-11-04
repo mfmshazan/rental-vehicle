@@ -32,7 +32,7 @@ export default async function DashboardPage({
   ]);
   return (
     <div className="container dashboard-page">
-      <div className="dashboard-heading">
+      <div className="dashboard-heading" data-reveal>
         <div className="page-heading">
           <div className="eyebrow">YOUR OWNER SPACE</div>
           <h1>Hello, {session.user.name?.split(" ")[0] || "there"}.</h1>
@@ -47,7 +47,7 @@ export default async function DashboardPage({
           Your vehicle has been saved. You can manage it below.
         </p>
       )}
-      <div className="dashboard-stats">
+      <div className="dashboard-stats" data-reveal-group>
         <div>
           <Icon name="car" size={23} />
           <strong>{vehicles.length}</strong>
@@ -65,7 +65,7 @@ export default async function DashboardPage({
         </div>
       </div>
       <section className="dashboard-section">
-        <div className="section-top">
+        <div className="section-top" data-reveal>
           <h2>Your vehicles</h2>
           <Link href="/list-your-car" className="button button-green">
             <Icon name="plus" size={17} /> Add a vehicle
@@ -85,7 +85,7 @@ export default async function DashboardPage({
             </Link>
           </div>
         ) : (
-          <div className="dashboard-vehicles">
+          <div className="dashboard-vehicles" data-reveal-group>
             {vehicles.map((vehicle) => (
               <article className="dashboard-vehicle" key={vehicle.id}>
                 <div className="dashboard-vehicle-photo">
@@ -136,7 +136,7 @@ export default async function DashboardPage({
         )}
       </section>
       <section className="dashboard-section" id="inquiries">
-        <div className="section-top">
+        <div className="section-top" data-reveal>
           <div>
             <h2>Your inquiries</h2>
             <p>Reply directly using the customer’s contact details.</p>
@@ -153,7 +153,7 @@ export default async function DashboardPage({
             </p>
           </div>
         ) : (
-          <div className="inquiry-list">
+          <div className="inquiry-list" data-reveal-group>
             {inquiries.map((inquiry) => (
               <article
                 key={inquiry.id}

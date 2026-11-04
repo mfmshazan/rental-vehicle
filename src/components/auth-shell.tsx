@@ -3,7 +3,7 @@ import { AuthForm } from "./auth-form";
 export function AuthShell({ register = false }: { register?: boolean }) {
   return (
     <div className="container auth-page">
-      <div className="auth-visual">
+      <div className="auth-visual" data-reveal>
         <Image
           src="/images/hero.jpg"
           alt="The open road awaits"
@@ -26,7 +26,7 @@ export function AuthShell({ register = false }: { register?: boolean }) {
           </p>
         </div>
       </div>
-      <section className="auth-panel">
+      <section className="auth-panel" data-reveal>
         <div className="eyebrow">
           {register ? "JOIN THE JOURNEY" : "WELCOME BACK"}
         </div>

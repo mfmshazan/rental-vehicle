@@ -13,7 +13,7 @@ export default async function ResetPasswordPage({
   const { token } = await searchParams;
   return (
     <div className="container auth-page">
-      <div className="auth-visual">
+      <div className="auth-visual" data-reveal>
         <Image src="/images/hero.jpg" alt="The open road awaits" fill sizes="50vw" />
         <div className="auth-visual-shade" />
         <div>
@@ -30,7 +30,7 @@ export default async function ResetPasswordPage({
           </p>
         </div>
       </div>
-      <section className="auth-panel">
+      <section className="auth-panel" data-reveal>
         <div className="eyebrow">NEW PASSWORD</div>
         <h1>Set a new password.</h1>
         {token ? (

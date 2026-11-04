@@ -3416,6 +3416,44 @@ button.calendar-cell.selectable:hover {
     font-size: 33px;
   }
 }
+/* Scroll-reveal animations. Gated on `.reveal-on` (set by JS before paint), so
+   content is fully visible for no-JS visitors and crawlers. `data-reveal`
+   animates a single block; `data-reveal-group` staggers its direct children. */
+.reveal-on [data-reveal],
+.reveal-on [data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-on [data-reveal].is-visible,
+.reveal-on [data-reveal-group].is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(2) {
+  transition-delay: 0.12s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(3) {
+  transition-delay: 0.19s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(4) {
+  transition-delay: 0.26s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(5) {
+  transition-delay: 0.33s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(6) {
+  transition-delay: 0.4s;
+}
+.reveal-on [data-reveal-group].is-visible > *:nth-child(n + 7) {
+  transition-delay: 0.47s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -3429,5 +3467,11 @@ button.calendar-cell.selectable:hover {
   .vehicle-card:hover,
   .button:hover {
     transform: none;
+  }
+  /* Keep reveal-tagged content visible when motion is reduced. */
+  .reveal-on [data-reveal],
+  .reveal-on [data-reveal-group] > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

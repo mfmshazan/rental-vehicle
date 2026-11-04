@@ -23,7 +23,7 @@ export default async function EditVehiclePage({
       <Link href="/dashboard" className="back-link">
         ← Back to dashboard
       </Link>
-      <div className="page-heading">
+      <div className="page-heading" data-reveal>
         <div className="eyebrow">KEEP IT FRESH</div>
         <h1>Edit your vehicle.</h1>
         <p>Make sure renters have the latest details.</p>

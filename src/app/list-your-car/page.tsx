@@ -6,7 +6,7 @@ export const metadata = { title: "List your vehicle" };
 export default async function ListVehiclePage() {
   const session = await auth();
   const heading = (
-    <div className="page-heading">
+    <div className="page-heading" data-reveal>
       <div className="eyebrow">FOR THE OWNERS. FOR THE OPPORTUNITIES.</div>
       <h1>
         Your next chapter
@@ -21,7 +21,7 @@ export default async function ListVehiclePage() {
       {session ? (
         <>
           {heading}
-          <div className="editor-layout">
+          <div className="editor-layout" data-reveal>
             <VehicleForm />
             <aside className="owner-tips">
               <span className="tip-icon">
@@ -47,7 +47,7 @@ export default async function ListVehiclePage() {
       ) : (
         <div className="owner-welcome">
           {heading}
-          <div className="owner-benefits">
+          <div className="owner-benefits" data-reveal-group>
             {[
               [
                 "car",
@@ -76,7 +76,7 @@ export default async function ListVehiclePage() {
               </div>
             ))}
           </div>
-          <div className="owner-start-card">
+          <div className="owner-start-card" data-reveal>
             <span className="eyebrow">LET’S GET YOU STARTED</span>
             <h2>
               More possibilities.

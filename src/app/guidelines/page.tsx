@@ -2,7 +2,7 @@ import Link from "next/link";
 export const metadata = { title: "Rental guidelines" };
 export default function GuidelinesPage() {
   return (
-    <article className="container prose-page">
+    <article className="container prose-page" data-reveal-group>
       <Link href="/" className="back-link">
         ← Back to Roam
       </Link>
