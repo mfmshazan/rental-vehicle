@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon } from "@/components/icon";
 export default function NotFound() {
   return (
-    <div className="container empty-state not-found">
+    <div className="container empty-state not-found" data-reveal-group>
       <span className="eyebrow">A SMALL DETOUR</span>
       <h1>This road ends here.</h1>
       <p>

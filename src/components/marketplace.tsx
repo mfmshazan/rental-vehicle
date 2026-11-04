@@ -63,7 +63,7 @@ export function Marketplace({
   return (
     <>
       {!savedOnly && (
-        <section className="hero-section container">
+        <section className="hero-section container" data-reveal>
           <div className="hero">
             <Image
               src="/images/hero.jpg"
@@ -169,7 +169,7 @@ export function Marketplace({
         className={`container explore-section ${savedOnly ? "saved-section" : ""}`}
         id="explore"
       >
-        <div className="section-top">
+        <div className="section-top" data-reveal>
           <div>
             <div className="eyebrow">
               {savedOnly ? "YOUR SHORTLIST" : "FIND YOUR PERFECT MATCH"}
@@ -290,7 +290,7 @@ export function Marketplace({
             </button>
           </div>
         )}
-        <div className="vehicle-grid" id="vehicle-grid">
+        <div className="vehicle-grid" id="vehicle-grid" data-reveal-group>
           {filtered.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />
           ))}
@@ -332,7 +332,7 @@ export function Marketplace({
         <>
           <section className="how-section" id="how-it-works">
             <div className="container">
-              <div className="section-top">
+              <div className="section-top" data-reveal>
                 <div>
                   <div className="eyebrow">LESS PLANNING. MORE GOING.</div>
                   <h2>Your next trip, in three simple steps.</h2>
@@ -343,7 +343,7 @@ export function Marketplace({
                   The owner takes it from there.
                 </p>
               </div>
-              <div className="steps-grid">
+              <div className="steps-grid" data-reveal-group>
                 <div className="step">
                   <div className="step-top">
                     <span className="step-icon">
@@ -387,7 +387,7 @@ export function Marketplace({
             </div>
           </section>
           <section className="container owner-section">
-            <div className="owner-banner">
+            <div className="owner-banner" data-reveal>
               <Image
                 src="/images/suv.jpg"
                 alt="A vehicle ready for its next journey"
@@ -417,7 +417,7 @@ export function Marketplace({
             </div>
           </section>
           <section className="container faq-section">
-            <div>
+            <div data-reveal>
               <div className="eyebrow">BEFORE YOU HIT THE ROAD</div>
               <h2>
                 A few things{" "}
@@ -428,7 +428,7 @@ export function Marketplace({
                 Read our rental guidelines <Icon name="arrow" size={17} />
               </Link>
             </div>
-            <div className="faq-list">
+            <div className="faq-list" data-reveal-group>
               {[
                 [
                   "How does renting through Roam work?",

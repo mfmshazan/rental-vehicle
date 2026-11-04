@@ -48,7 +48,7 @@ export default async function VehiclePage({ params }: Props) {
       <Link href="/#explore" className="back-link">
         ← Back to vehicles
       </Link>
-      <div className="detail-heading">
+      <div className="detail-heading" data-reveal>
         <div>
           <div className="eyebrow">
             {vehicle.category.toUpperCase()} · {vehicle.driveType.toUpperCase()}
@@ -63,7 +63,7 @@ export default async function VehiclePage({ params }: Props) {
         </div>
         <FavoriteButton id={id} large />
       </div>
-      <div className="detail-layout">
+      <div className="detail-layout" data-reveal>
         <div className="detail-main">
           <PhotoGallery
             photos={photos}
@@ -130,7 +130,7 @@ export default async function VehiclePage({ params }: Props) {
         />
       </div>
       <section className="related-section">
-        <div className="section-top">
+        <div className="section-top" data-reveal>
           <div>
             <div className="eyebrow">KEEP EXPLORING</div>
             <h2>More roads. More possibilities.</h2>
@@ -139,7 +139,7 @@ export default async function VehiclePage({ params }: Props) {
             All vehicles <Icon name="arrow" size={17} />
           </Link>
         </div>
-        <div className="vehicle-grid">
+        <div className="vehicle-grid" data-reveal-group>
           {related.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />
           ))}

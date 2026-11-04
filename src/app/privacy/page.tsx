@@ -2,7 +2,7 @@ import Link from "next/link";
 export const metadata = { title: "Privacy" };
 export default function PrivacyPage() {
   return (
-    <article className="container prose-page">
+    <article className="container prose-page" data-reveal-group>
       <Link href="/" className="back-link">
         ← Back to Roam
       </Link>

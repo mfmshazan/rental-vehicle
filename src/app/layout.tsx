@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import "./globals.css";
 
 const jakarta = localFont({
@@ -23,12 +24,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={jakarta.variable}>
       <body>
+        {/* Enable scroll-reveal before first paint so tagged elements start
+            hidden only when JS is present (keeps content visible without JS). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('reveal-on')",
+          }}
+        />
         <a className="skip-link" href="#main">
           Skip to content
         </a>
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <ScrollReveal />
       </body>
     </html>
   );

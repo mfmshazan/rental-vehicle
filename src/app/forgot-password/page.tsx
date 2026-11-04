@@ -7,7 +7,7 @@ export default async function ForgotPasswordPage() {
   if (await auth()) redirect("/dashboard");
   return (
     <div className="container auth-page">
-      <div className="auth-visual">
+      <div className="auth-visual" data-reveal>
         <Image src="/images/hero.jpg" alt="The open road awaits" fill sizes="50vw" />
         <div className="auth-visual-shade" />
         <div>
@@ -23,7 +23,7 @@ export default async function ForgotPasswordPage() {
           </p>
         </div>
       </div>
-      <section className="auth-panel">
+      <section className="auth-panel" data-reveal>
         <div className="eyebrow">FORGOT YOUR PASSWORD?</div>
         <h1>Reset your password.</h1>
         <p>

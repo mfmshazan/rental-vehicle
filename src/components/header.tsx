@@ -14,7 +14,7 @@ export async function Header() {
             <span />
             <span />
           </span>
-          roam<span className="logo-dot">.</span>
+          Roam<span className="logo-dot">.</span>
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
           <Link href="/#explore">Find a vehicle</Link>
